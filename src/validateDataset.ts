@@ -1,25 +1,6 @@
-import { z } from "zod";
 import fs from "fs";
 
-// --- 1️⃣ Définition du schéma Zod (runtime) ---
-const briefSchema = z.object({
-  level: z.enum(["junior", "intermediate", "senior"]),
-  domain: z.string(),
-  tech_focus: z.enum(["frontend", "backend", "fullstack"]),
-  stack: z.array(z.string()).min(1),
-  duration: z.string(),
-  brief: z.string(),
-  business_problem: z.string(),
-  target_users: z.string(),
-  goals: z.array(z.string()).min(1),
-  deliverables: z.array(z.string()).min(1),
-  assessment_criteria: z.string(),
-  company_size: z.enum(["Startup", "SME", "Large Enterprise"]),
-  complexity: z.enum(["low", "medium", "high"])
-});
-
-// --- 2️⃣ Type statique dérivé automatiquement ---
-type ProjectBrief = z.infer<typeof briefSchema>;
+import { briefSchema, type ProjectBrief } from "./schema/brief.js";
 
 // --- 3️⃣ Validation du dataset ---
 const DATASET_PATH = "src/briefs_dataset.json";
