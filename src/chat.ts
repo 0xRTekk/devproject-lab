@@ -1,15 +1,8 @@
 import 'dotenv/config';
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import OpenAI from 'openai';
-
 import { parseCliArgs } from './cliArgs.js';
 import { buildSystemPrompt, buildUserPrompt } from './prompts.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const OUTPUT_DIR = path.resolve(__dirname, '../output');
+import { writeBriefsToFile } from './outputWriter.js';
+import { createOpenAIClient } from './openaiClient.js';
 
 async function main() {
   const cliArgs = parseCliArgs();
@@ -22,7 +15,7 @@ async function main() {
   const systemPrompt = buildSystemPrompt();
   const userPrompt = buildUserPrompt(cliArgs);
 
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const client = createOpenAIClient(process.env.OPENAI_API_KEY);
   const targetModel = 'gpt-4o-mini';
 
   const responsePayload = {
@@ -51,13 +44,7 @@ async function main() {
     process.exit(1);
   }
 
-  await fs.mkdir(OUTPUT_DIR, { recursive: true });
-
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const filename = `briefs-${timestamp}.json`;
-  const filePath = path.join(OUTPUT_DIR, filename);
-
-  await fs.writeFile(filePath, JSON.stringify(parsed, null, 2), 'utf8');
+  const filePath = await writeBriefsToFile(parsed);
 
   console.log(`Briefs saved to ${filePath}`);
 }
