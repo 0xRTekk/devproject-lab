@@ -4,7 +4,7 @@ import { parseCliArgs } from './cliArgs.js';
 import { buildSystemPrompt, buildUserPrompt } from './prompts.js';
 import { writeBriefsToFile } from './outputWriter.js';
 import { createOpenAIClient } from './openaiClient.js';
-
+import { briefSchema } from './schema/brief.js';
 
 async function getOpenAIClient() {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -41,6 +41,20 @@ async function writeBriefsToFilepath(briefs: unknown) {
   return filePath;
 }
 
+async function validateJsonFormat(json: unknown): Promise<void> {
+  if (Array.isArray(json)) {
+    for (const item of json) {
+      await validateJsonFormat(item);
+    }
+    return;
+  }
+
+  const result = briefSchema.safeParse(json);
+  if (!result.success) {
+    throw new Error(`Invalid JSON format: ${result.error.message}`);
+  }
+}
+
 async function main() {
   const cliArgs = parseCliArgs();
   const systemPrompt = buildSystemPrompt();
@@ -49,6 +63,7 @@ async function main() {
 
   const client = await getOpenAIClient();
   const parsed = await getResponseFromOpenAI(client, userPrompt, systemPrompt, targetModel);
+  await validateJsonFormat(parsed);
   await writeBriefsToFilepath(parsed);
 }
 
