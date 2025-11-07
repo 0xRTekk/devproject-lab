@@ -62,9 +62,9 @@ async function main() {
   const targetModel = 'gpt-4o-mini';
 
   const client = await getOpenAIClient();
-  const parsed = await getResponseFromOpenAI(client, userPrompt, systemPrompt, targetModel);
-  await validateJsonFormat(parsed);
-  await writeBriefsToFilepath(parsed);
+  const jsonParsedResponse = await getResponseFromOpenAI(client, userPrompt, systemPrompt, targetModel);
+  await validateJsonFormat(jsonParsedResponse);
+  await writeBriefsToFilepath(jsonParsedResponse);
 }
 
 main().catch((err) => {
