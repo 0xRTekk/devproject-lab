@@ -4,6 +4,7 @@ import { parseCliArgs } from './cliArgs.js';
 import { buildSystemPrompt, buildUserPrompt } from './prompts.js';
 import { writeBriefsToFile } from './outputWriter.js';
 import { createOpenAIClient } from './openaiClient.js';
+import { createSupabaseClient } from './supabaseClient.js';
 import { briefSchema } from './schema/brief.js';
 
 async function getOpenAIClient() {
@@ -12,6 +13,15 @@ async function getOpenAIClient() {
     throw new Error('Missing OPENAI_API_KEY. Set it in your environment or .env file.');
   }
   return createOpenAIClient(apiKey);
+}
+
+function getSupabaseClient() {
+  const supabaseProjectUrl = process.env.SUPABASE_PROJECT_URL;
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+  if (!supabaseProjectUrl || !supabaseAnonKey) {
+    throw new Error('Missing SUPABASE_PROJECT_URL or SUPABASE_ANON_KEY. Set them in your environment or .env file.');
+  }
+  return createSupabaseClient(supabaseProjectUrl, supabaseAnonKey);
 }
 
 async function getResponseFromOpenAI(client: OpenAI, userPrompt: string, systemPrompt: string, targetModel: string) {
@@ -56,6 +66,7 @@ async function validateJsonFormat(json: unknown): Promise<void> {
 }
 
 async function main() {
+  const supabaseClient = getSupabaseClient();
   const cliArgs = parseCliArgs();
   const systemPrompt = buildSystemPrompt();
   const userPrompt = buildUserPrompt(cliArgs);

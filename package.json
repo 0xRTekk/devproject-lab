@@ -9,6 +9,7 @@
     "start": "node dist/chat.js --level=junior --domain=FinTech --tech_focus=frontend --stack=React,TypeScript,TailwindCSS --duration=\"2 weeks\" --count=1"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.81.1",
     "dotenv": "^16.4.5",
     "openai": "^4.58.1",
     "zod": "^3.25.76"
