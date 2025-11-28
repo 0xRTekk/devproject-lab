@@ -26,7 +26,7 @@ export class SupabaseBriefsRepository {
     this.client = createClient(projectUrl, anonKey);
   }
 
-  async insertBriefWithStories(brief: ProjectBrief): Promise<InsertBriefResult> {
+  async insertBriefWithStories(brief: ProjectBrief, embedding: number[]): Promise<InsertBriefResult> {
     const briefRow = {
       level: brief.level,
       domain: brief.domain,
@@ -41,6 +41,7 @@ export class SupabaseBriefsRepository {
       assessment_criteria: brief.assessment_criteria,
       company_size: brief.company_size,
       complexity: brief.complexity,
+      embedding,
     };
 
     const { data, error } = await this.client.from('briefs').insert(briefRow).select().single();

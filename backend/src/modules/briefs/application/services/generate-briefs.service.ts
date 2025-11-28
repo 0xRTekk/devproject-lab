@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BriefsPromptFactory } from '../../domain/services/briefs-prompt.factory';
 import { BriefsParser } from '../../domain/services/briefs-parser.service';
+import { BriefsEmbeddingService } from '../../domain/services/briefs-embedding.service';
 import { BriefGenerationOptions } from '../../domain/value-objects/brief-generation-options';
 import { OpenAiProvider } from '../../infrastructure/ai/openai.provider';
 import { SupabaseBriefsRepository } from '../../infrastructure/persistence/supabase-briefs.repository';
@@ -15,6 +16,7 @@ export class GenerateBriefsService {
     private readonly configService: ConfigService,
     private readonly promptFactory: BriefsPromptFactory,
     private readonly parser: BriefsParser,
+    private readonly embeddingService: BriefsEmbeddingService,
     private readonly openAiProvider: OpenAiProvider,
     private readonly briefsRepository: SupabaseBriefsRepository,
     private readonly fileWriter: BriefsFileWriter,
@@ -36,7 +38,10 @@ export class GenerateBriefsService {
     const briefs = this.parser.parse(openAiResponse);
 
     const persistedBriefs = await Promise.all(
-      briefs.map((brief) => this.briefsRepository.insertBriefWithStories(brief)),
+      briefs.map(async (brief) => {
+        const embedding = await this.embeddingService.generateEmbedding(brief);
+        return this.briefsRepository.insertBriefWithStories(brief, embedding);
+      }),
     );
 
     const filePath = await this.fileWriter.write(openAiResponse);
