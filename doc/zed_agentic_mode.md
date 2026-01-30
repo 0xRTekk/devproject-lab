@@ -13,7 +13,7 @@
 ## Snippet ZED
 
 ```markdown
-Read .agent.md and strictly follow it.
+Read .zed/.agent.md and strictly follow it.
 
 Confirm that you understand the rules.
 
@@ -214,4 +214,3 @@ A task is done when:
 End of rules.
 
 ```
-
