@@ -1,22 +1,7 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
+// import { cookies } from "next/headers";
 
-let supabaseClient: SupabaseClient | null = null;
-
-/**
- * Returns a singleton Supabase client instance.
- * Uses environment variables SUPABASE_PROJECT_URL and SUPABASE_ANON_KEY.
- * This client is intended for server-side use only.
- */
-export function getSupabaseClient(): SupabaseClient {
-  if (!supabaseClient) {
-    const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
-    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !supabaseAnonKey) {
-      throw new Error('Missing SUPABASE_PROJECT_URL or SUPABASE_ANON_KEY environment variables');
-    }
-
-    supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
-  }
-  return supabaseClient;
-}
+export const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!, // backend only
+);
