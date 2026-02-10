@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { getSupabaseClient } from '../lib/supabaseClient';
+import { createClient } from '../lib/supabase/client';
 
 describe('Supabase Client Integration', () => {
-  let supabase = getSupabaseClient();
+  let supabase = createClient();
   let insertedId: number | null = null;
 
   beforeAll(() => {
