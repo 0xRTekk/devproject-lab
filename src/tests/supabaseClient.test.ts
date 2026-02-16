@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createClient } from '../lib/supabase/client';
 
 describe('Supabase Client Integration', () => {
-  let supabase = createClient();
+  const supabase = createClient();
   let insertedId: number | null = null;
 
   beforeAll(() => {

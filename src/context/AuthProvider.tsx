@@ -2,11 +2,12 @@
 
 import React, { createContext, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import type { User } from "@/types/user";
 
 const supabase = createClient();
 
 type AuthContextValue = {
-  user: any | null;
+  user: User | null;
   loading: boolean;
 };
 
@@ -15,7 +16,7 @@ export const AuthContext = createContext<AuthContextValue | undefined>(
 );
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

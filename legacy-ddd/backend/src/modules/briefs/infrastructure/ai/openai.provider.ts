@@ -27,7 +27,7 @@ export class OpenAiProvider {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
-    } as any);
+    });
 
     const rawJson = response.output_text;
 
@@ -37,7 +37,7 @@ export class OpenAiProvider {
 
     try {
       return JSON.parse(rawJson);
-    } catch (error) {
+    } catch (_error) {
       throw new InternalServerErrorException('OpenAI returned an invalid JSON payload.');
     }
   }

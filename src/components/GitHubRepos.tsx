@@ -2,18 +2,24 @@
 
 import { useEffect, useState } from "react";
 
+type Repo = { id: string | number; name: string };
+
 export default function GitHubRepos() {
-    const [repos, setRepos] = useState([]);
+    const [repos, setRepos] = useState<Repo[]>([]);
 
     useEffect(() => {
-        fetch("/api/github/repos")
-            .then((res) => res.json())
-            .then(setRepos);
+        async function load() {
+            const res = await fetch("/api/github/repos");
+            const data = (await res.json()) as Repo[];
+            setRepos(data ?? []);
+        }
+
+        load();
     }, []);
 
     return (
         <ul>
-            {repos.map((r: any) => (
+            {repos.map((r) => (
                 <li key={r.id}>{r.name}</li>
             ))}
         </ul>
