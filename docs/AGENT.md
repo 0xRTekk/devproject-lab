@@ -1,3 +1,7 @@
+# PRIORITY — MAX SIZE 4KB
+
+> PRIORITY AND EXTREMELY IMPORTANT: Any modification to this file must remain under 4 kilobytes (4KB). If a change causes the file to exceed this limit, optimize the content by shortening it, externalizing details (e.g., to `docs/`), or replacing long sections with links. Do not merge changes that make the file exceed 4KB without first reducing its size.
+
 # AI Agent Operating Manual
 
 This file defines how the AI assistant must behave in this repository.
@@ -50,6 +54,26 @@ After approval, you MUST:
 - Avoid introducing abstractions
 
 No scope creep.
+
+---
+
+## Git Flow & PR
+
+Instructions (mandatory):
+
+- Use Git Flow for development. For each new feature, create a branch following the Git Flow pattern: `feature/<short-descriptive-name>` (e.g., `feature/add-github-sync`).
+- Branch names must be short, readable, and reflect the implementation — avoid timestamps and unnecessary details.
+- Open a Pull Request (PR) for the branch. The PR title must match the implementation (e.g., `feat: add GitHub repo sync`) and clearly state what was delivered.
+- For each PR, create a Markdown file summarizing what was done. Recommended location: `docs/prs/` (create the folder if needed).
+- The Markdown filename must be identical to the PR title (sanitize invalid filename characters as needed — replace `/` with `-`, spaces with `-`). Do not include timestamps in the filename.
+- Minimal PR file content:
+  - Title (identical to the PR title)
+  - Summary of changes
+  - Modified files (list)
+  - Tests passed / reproduction steps
+  - Points of attention / follow-ups
+
+These rules ensure traceability and readability of changes. Any PR without a corresponding Markdown file may be rejected until the note is added.
 
 ---
 
