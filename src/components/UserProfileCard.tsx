@@ -1,22 +1,14 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import useAuth from "@/hooks/useAuth";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
-
-type User = {
-    id?: string;
-    email?: string;
-    user_metadata?: Record<string, any>;
-};
+import type { User } from "@/types/user";
 
 export function PureUserProfileCard({ user }: { user?: User | null }) {
-    const avatar =
-        user?.user_metadata?.avatar_url ||
-        user?.user_metadata?.avatar ||
-        (user as any)?.avatar_url ||
-        null;
+    const avatar = user?.user_metadata?.avatar_url || user?.user_metadata?.avatar || user?.avatar_url || null;
 
     const name =
         user?.user_metadata?.full_name ||
@@ -40,11 +32,15 @@ export function PureUserProfileCard({ user }: { user?: User | null }) {
                 {user ? (
                     <>
                         {avatar ? (
-                            <img
-                                src={avatar}
-                                alt={name + " avatar"}
-                                className="w-20 h-20 rounded-full object-cover"
-                            />
+                            <div className="w-20 h-20 rounded-full overflow-hidden">
+                                <Image
+                                    src={String(avatar)}
+                                    alt={name + " avatar"}
+                                    width={80}
+                                    height={80}
+                                    className="rounded-full object-cover"
+                                />
+                            </div>
                         ) : (
                             <div className="w-20 h-20 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600">
                                 <span className="text-xl">👤</span>
@@ -80,9 +76,7 @@ export function PureUserProfileCard({ user }: { user?: User | null }) {
 export default function UserProfileCard() {
     const { user, loading } = useAuth();
 
-    if (loading) return <div aria-busy="true">Loading…</div>;
+    if (loading) return <div role="status" aria-busy="true">Loading…</div>;
 
     return <PureUserProfileCard user={user} />;
 }
-
-export type { User };
